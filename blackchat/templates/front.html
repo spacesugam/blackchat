@@ -1,0 +1,104 @@
+{%load static%}
+<!DOCTYPE html>
+<html >
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"  />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{% static 'front.css'%}">
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title id='t1' >AllChat</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    <style>
+
+        .cont{
+            position: fixed;
+            top:95%;
+            left:40%;
+            
+            transform: translate(-50%, -50%);
+            }
+        .msg-bs{
+                position:relative;
+                left: 10px;
+                bottom:10px;
+                width: 1050px;
+                height:450px;
+                overflow: auto;
+                background:black;
+                color: #fff;
+              }
+        .msg{ 
+                position:absolute;
+                 padding-left:10px;
+                 padding-top:10px;
+              }
+              #unk{
+                color:rgb(184, 5, 5);
+                position:relative;
+                left:8px;
+                top:15px;
+              }
+
+        </style>
+
+</head>
+
+
+
+<body >
+   
+    <h1>Blackchat</h1>
+
+    <div class="cont">
+    
+         <form id="form",bgcolor="black",>
+             <input class=" input"type="text" name="message" placeholder="Type..."/>
+             <input class="send" type="submit" name="" value="Send">
+          </form>
+     </div>
+
+    <div class="msg-bs">
+    <div class="msg" id="messages">
+    </div>
+    </div>
+
+
+
+
+
+    <script type="text/javascript">
+        let url = `ws://${window.location.host}/ws/socket-server/`
+
+        const chatSocket = new WebSocket(url)
+
+        chatSocket.onmessage = function(e){
+            let data = JSON.parse(e.data)
+            console.log('Data:', data)
+
+            if(data.type === 'chat'){
+                let messages = document.getElementById('messages')
+                
+                messages.insertAdjacentHTML('beforeend', `<div>
+                    <label id="unk">Unknown- </label>
+                                        <p>${data.message}</p>
+                                    </div>`)
+            }
+        }
+
+        let form = document.getElementById('form')
+        form.addEventListener('submit', (e)=> {
+            e.preventDefault()
+            let message = e.target.message.value 
+            chatSocket.send(JSON.stringify({
+                'message':message
+            }))
+            form.reset()
+        })
+
+    </script>
+</body>
+</html>
