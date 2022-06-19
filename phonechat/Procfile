@@ -1,0 +1,1 @@
+web: gunicorn phonechat.wsgi --log-file -
