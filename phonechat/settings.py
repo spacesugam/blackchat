@@ -134,7 +134,8 @@ USE_TZ = True
 STATIC_ROOT=os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = 'static/'
-
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
